@@ -1,0 +1,67 @@
+127.0.0.1	localhost
+127.0.0.1	localhost2
+
+#common
+10.10.1.220 sunspear2
+10.10.1.221 m0.db.test.my m0.redis.test.my sunspear1
+
+#local host
+127.0.0.1 m0.redis.dev
+## huajue
+127.0.0.1 c.api.dev.hj
+127.0.0.1 auth.meiyue.dev
+127.0.0.1 admin.huajue.com
+127.0.0.1 wx.huajue.com
+127.0.0.1 msr.huajue.com
+127.0.0.1 admin.msronline.net
+127.0.0.1 admin.mscftone.dev
+127.0.0.1 b-admin.mscftone.net
+127.0.0.1 admin.huajue.me
+127.0.0.1 c.huajue.com
+127.0.0.1 b.myh.me
+127.0.0.1 common.api.dev.hj
+127.0.0.1 msr.api.dev.ms
+127.0.0.1 ac.api.dev.ms
+127.0.0.1 mp.dev.ms
+127.0.0.1 cft.api.dev.ms
+127.0.0.1 c-cft.api.dev.ms
+127.0.0.1 settle.api.dev.myh
+127.0.0.1 shop.api.dev.myh
+127.0.0.1 msr.api.dev.ms
+127.0.0.1 comment.api.dev.ms
+
+## meiyue
+127.0.0.1 ad.api.dev.myh
+127.0.0.1 c.api.dev.myh
+127.0.0.1 b.api.dev.myh
+127.0.0.1 auth.api.dev.myh
+127.0.0.1 base.api.dev.myh
+127.0.0.1 settle.api.dev.myh
+127.0.0.1 shop.api.dev.myh
+127.0.0.1 trans.api.dev.myh
+127.0.0.1 pb.api.dev.myh
+127.0.0.1 cmm.api.dev.myh
+127.0.0.1 common.api.dev.myh
+127.0.0.1 college.api.dev.myh
+127.0.0.1 old-server.api.dev.myh
+
+#testing host
+10.10.1.220  old-server.api.test.myh
+10.10.1.220  base.api.test.myh
+10.10.1.220  common.api.test.myh
+10.10.1.220  auth.api.test.myh
+10.10.1.220  shop.api.test.myh
+10.10.1.220  settle.api.test.myh
+10.10.1.220  c.api.test.myh
+10.10.1.220  b.api.test.myh
+10.10.1.220  trans.api.test.myh
+10.10.1.220  pb.api.test.myh
+10.10.1.220  cmm.api.test.myh
+10.10.1.220  common.api.test.hj
+10.10.1.220  c.api.test.hj
+10.10.1.220  ad.api.test.myh
+10.10.1.220  msr.api.test.ms
+10.10.1.220  ac.api.test.ms
+10.10.1.220  comment.api.test.ms
+10.10.1.220  c-cft.api.test.ms
+10.10.1.220  cft.api.test.ms
