@@ -13,8 +13,7 @@ RUN apt-get update
 RUN apt-get install -y wget
 
 # Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \doc
-    && php composer-setup.php \
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \doc && php composer-setup.php \
     && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /bin/composer \
     && composer config -g repo.packagist composer https://packagist.phpcomposer.com
@@ -57,60 +56,52 @@ RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev \
     && docker-php-ext-install sysvsem \
     && docker-php-ext-install sysvshm \
     && docker-php-ext-install opcache \
-    #&& docker-php-ext-install pdo_firebird \
-    #&& docker-php-ext-install pdo_dblib \
-    #&& docker-php-ext-install pdo_oci \
-    #&& docker-php-ext-install pdo_odbc \
-    #&& docker-php-ext-install pdo_pgsql \
-    #&& docker-php-ext-install pgsql \
-    #&& docker-php-ext-install oci8 \
-    #&& docker-php-ext-install odbc \
-    #&& docker-php-ext-install dba \
-    #&& docker-php-ext-install interbase \
-    #&& :\
-    #&& apt-get install -y curl \
-    #&& apt-get install -y libcurl3 \
-    #&& apt-get install -y libcurl4-openssl-dev \
-    #&& docker-php-ext-install curl \
-    #&& :\
-    #&& apt-get install -y libreadline-dev \
-    #&& docker-php-ext-install readline \
-    #&& :\
-    #&& apt-get install -y libsnmp-dev \
-    #&& apt-get install -y snmp \
-    #&& docker-php-ext-install snmp \
-    #&& :\
-    #&& apt-get install -y libpspell-dev \
-    #&& apt-get install -y aspell-en \
-    #&& docker-php-ext-install pspell \
-    #&& :\
-    #&& apt-get install -y librecode0 \
-    #&& apt-get install -y librecode-dev \
-    #&& docker-php-ext-install recode \
-    #&& :\
-    #&& apt-get install -y libtidy-dev \
-    #&& docker-php-ext-install tidy \
-    #&& :\
-    #&& apt-get install -y libgmp-dev \
-    #&& ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
-    #&& docker-php-ext-install gmp \
-    #&& :\
-    #&& apt-get install -y postgresql-client \
-    #&& apt-get install -y mysql-client \
-    #&& :\
-    #&& apt-get install -y libc-client-dev \
-    #&& docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-    #&& docker-php-ext-install imap \
-    #&& :\
-    #&& apt-get install -y libldb-dev \
-    #&& apt-get install -y libldap2-dev \
-    #&& docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
-    #&& docker-php-ext-install ldap \
-    #&& :\
-    #&& apt-get install -y libmagickwand-dev \
-    #&& pecl install imagick-3.4.3 \
-    #&& docker-php-ext-enable imagick \
-    #&& :\
-    #&& apt-get install -y libmemcached-dev zlib1g-dev \
-    #&& pecl install memcached-2.2.0 \
-    #&& docker-php-ext-enable memcached
+
+## 安装MongoDb
+ARG INSTALL_MONGO=false
+
+RUN if [ ${INSTALL_MONGO} = true ]; then \
+    # Install the mongodb extension
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+      pecl install mongo && \
+      docker-php-ext-enable mongo \
+    ;fi && \
+    pecl install mongodb && \
+    docker-php-ext-enable mongodb \
+;fi
+
+## 安装Memcache
+ARG INSTALL_MEMCACHED=false
+
+RUN if [ ${INSTALL_MEMCACHED} = true ]; then \
+    # Install the php memcached extension
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+      curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/2.2.0.tar.gz"; \
+    else \
+      curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz"; \
+    fi \
+    && mkdir -p memcached \
+    && tar -C memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
+    && ( \
+        cd memcached \
+        && phpize \
+        && ./configure \
+        && make -j$(nproc) \
+        && make install \
+    ) \
+    && rm -r memcached \
+    && rm /tmp/memcached.tar.gz \
+    && docker-php-ext-enable memcached \
+;fi
+
+## 安装tideway扩展
+ARG INSTALL_TIDEWAY=false
+
+RUN RUN if [ ${INSTALL_TIDEWAY} = true ]; then \
+    echo 'deb http://s3-eu-west-1.amazonaws.com/tideways/packages debian main' > /etc/apt/sources.list.d/tideways.list; \
+    && wget -qO - https://s3-eu-west-1.amazonaws.com/tideways/packages/EEB5E8F4.gpg | sudo apt-key add - \
+    && apt-get update \
+    && apt-get install tideways-php tideways-daemon \
+    && docker-php-ext-enable tideways \
+
+;fi
